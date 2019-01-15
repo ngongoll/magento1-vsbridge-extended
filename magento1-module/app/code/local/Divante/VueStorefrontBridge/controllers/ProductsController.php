@@ -30,6 +30,16 @@ class Divante_VueStorefrontBridge_ProductsController extends Divante_VueStorefro
                 $productDTO['id'] = intval($productDTO['entity_id']);
                 unset($productDTO['entity_id']);
 
+                $productDTO['media_gallery'] = $product->getMediaGalleryImages();
+
+
+                if($product->getId() == 337){
+
+//                    print_r($product->getMediaGalleryImages());die();
+
+                }
+
+
                 if ($productDTO['type_id'] !== 'simple') {
                     $configurable = Mage::getModel('catalog/product_type_configurable')->setProduct($product);
                     $childProducts = $configurable->getUsedProductCollection()->addAttributeToSelect('*')->addFilterByRequiredOptions();
@@ -56,7 +66,22 @@ class Divante_VueStorefrontBridge_ProductsController extends Divante_VueStorefro
                         $childDTO = $this->_filterDTO($childDTO, $confChildBlacklist);
                         $productDTO['configurable_children'][] = $childDTO;
                     }
+                } else {
+
+                    foreach($product->getMediaGalleryImages() as $image){
+
+                        $productDTO['gallery'][] = [
+                            'label' => $image['label'],
+                            'src' => $image['file'],
+                            'position' => $image['position']
+                        ];
+
+                    }
+
+
                 }
+
+
 
                 $cats = $product->getCategoryIds();
                 $productDTO['category'] = array();
