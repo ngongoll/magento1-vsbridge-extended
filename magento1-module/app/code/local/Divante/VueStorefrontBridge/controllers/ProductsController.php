@@ -25,6 +25,8 @@ class Divante_VueStorefrontBridge_ProductsController extends Divante_VueStorefro
 
             foreach ($productCollection as $product) {
                 $productDTO = $product->getData();
+                $product = mage::getModel('catalog/product')->load($product->getId());
+
                 $productDTO['id'] = intval($productDTO['entity_id']);
                 unset($productDTO['entity_id']);
 
@@ -63,6 +65,29 @@ class Divante_VueStorefrontBridge_ProductsController extends Divante_VueStorefro
                     $productDTO['category'][] = array(
                         "category_id" => $cat->getId(),
                         "name" => $cat->getName());
+                }
+
+                if($product->getData('has_options')) {
+                    foreach ($product->getOptions() as $option) {
+                        #TODO add sorting
+                        $productDTO['custom_options'][$option->getOptionId()] = [
+                            'option_id' => $option->getOptionId(),
+                            'type' => $option->getType(),
+                            'title' => $option->getTitle()
+
+                        ];
+                        foreach ($option->getValues() as $value) {
+                            #TODO add sorting
+
+                            $productDTO['custom_options'][$option->getOptionId()]['values'][$value->getOptionTypeId()] = [
+                                'title' => $value->getTitle(),
+                                'price' => $value->getPrice(),
+                                'option_type_id' => $value->getOptionTypeId(),
+                                'price_type' => $value->getPriceType()
+
+                            ];
+                        }
+                    }
                 }
 
                 $productDTO = $this->_filterDTO($productDTO);
