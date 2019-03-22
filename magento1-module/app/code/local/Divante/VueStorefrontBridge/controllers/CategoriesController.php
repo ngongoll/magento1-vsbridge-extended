@@ -71,8 +71,8 @@ class Divante_VueStorefrontBridge_CategoriesController extends Divante_VueStoref
         }
         // $catDTO['level'] = $level;
         $catDTO['children_count'] = count($catDTO['children_data']);
+        $catDTO['product_count'] = $category->getProductCount();
         $catDTO                   = $this->_filterDTO($catDTO);
-
         return $catDTO;
     }
 }
