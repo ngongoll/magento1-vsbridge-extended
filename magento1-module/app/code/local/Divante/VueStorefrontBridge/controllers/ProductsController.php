@@ -43,7 +43,7 @@ class Divante_VueStorefrontBridge_ProductsController extends Divante_VueStorefro
                 ->getCollection()
                 ->addAttributeToSort('updated_at', 'DESC')
                 ->addAttributeToSelect('*')
-                ->setPage($params['page'], $params['pageSize']);
+                ->setPage($params['page'], 10);
 
             if (isset($params['type_id']) && $params['type_id']) {
                 $productCollection->addFieldToFilter('type_id', $params['type_id']);
@@ -108,6 +108,29 @@ class Divante_VueStorefrontBridge_ProductsController extends Divante_VueStorefro
                     $productDTO['category_ids'][] = $category_id;
                 }
 
+                if($product->getData('has_options')) {
+                    $product = Mage::getModel('catalog/product')->load($product->getId());
+                    foreach ($product->getOptions() as $option) {
+                        #TODO add sorting
+                        $productDTO['custom_options'][$option->getOptionId()] = [
+                            'option_id' => $option->getOptionId(),
+                            'type' => $option->getType(),
+                            'title' => $option->getTitle()
+
+                        ];
+                        foreach ($option->getValues() as $value) {
+                            #TODO add sorting
+
+                            $productDTO['custom_options'][$option->getOptionId()]['values'][$value->getOptionTypeId()] = [
+                                'title' => $value->getTitle(),
+                                'price' => $value->getPrice(),
+                                'option_type_id' => $value->getOptionTypeId(),
+                                'price_type' => $value->getPriceType()
+
+                            ];
+                        }
+                    }
+                }
                 $productDTO = $this->_filterDTO($productDTO);
                 $result[] = $productDTO;
             }

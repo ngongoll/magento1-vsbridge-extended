@@ -57,6 +57,7 @@ class Divante_VueStorefrontBridge_Model_Api_Cart
 
             $item['product_option']['extension_attributes'] = [
                 'configurable_item_options' => $this->cartItem->getConfigurableOptions($cartItem),
+                'custom_options' => $this->cartItem->getCustomOptions($cartItem)
             ];
 
             return $item;
@@ -112,6 +113,16 @@ class Divante_VueStorefrontBridge_Model_Api_Cart
                 foreach ($options as $option) {
                     $option = (array)$option;
                     $params['super_attribute'][$option['option_id']] = $option['option_value'];
+                }
+
+            }
+            if (!empty($productOption['custom_options'])) {
+                $customoptions = $productOption['custom_options'];
+
+                foreach ($customoptions as $customoption){
+                    $customoption = (array)$customoption;
+                    $params['options'][$customoption['option_id']] = $customoption['option_value'];
+
                 }
             }
         }
