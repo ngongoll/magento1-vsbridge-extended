@@ -185,6 +185,7 @@ class Divante_VueStorefrontBridge_AbstractController extends Mage_Core_Controlle
             if($cartId) {
                 $secretKey = $this->configSettings->getSecretKey();
                 $tokenData = JWT::decode($cartId, $secretKey, 'HS256');
+// TODO if quote doesn't exists create new quote object
                 return Mage::getModel('sales/quote')->load($tokenData->cartId);
             } else
                 return null;
