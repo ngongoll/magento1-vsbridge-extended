@@ -43,7 +43,7 @@ class Divante_VueStorefrontBridge_ProductsController extends Divante_VueStorefro
                 ->getCollection()
                 ->addAttributeToSort('updated_at', 'DESC')
                 ->addAttributeToSelect('*')
-                ->setPage($params['page'], 10);
+                ->setPage($params['page'], $params['pageSize']);
 
             if (isset($params['type_id']) && $params['type_id']) {
                 $productCollection->addFieldToFilter('type_id', $params['type_id']);

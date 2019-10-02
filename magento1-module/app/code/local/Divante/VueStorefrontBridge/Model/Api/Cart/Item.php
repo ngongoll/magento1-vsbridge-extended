@@ -52,7 +52,7 @@ class Divante_VueStorefrontBridge_Model_Api_Cart_Item
 
         if (is_array($_customOptions['options'])) {
             foreach ($_customOptions['options'] as $customOption) {
-                $customOptions[] = [
+                $customOptions[$customOption['option_id']] = [
                     'option_id' => $customOption['option_id'],
                     'option_value' => $customOption['option_value'],
                 ];

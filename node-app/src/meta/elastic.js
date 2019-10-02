@@ -1,15 +1,20 @@
+const config = require('../../config.json')
+const VsBridgeApiClient = require('../lib/vsbridge-api')
+const api = new VsBridgeApiClient(config)
+
 function putAlias(db, originalName, aliasName, next) {
     let step2 = () => {
-        db.indices.putAlias({index: originalName, name: aliasName}).then(result => {
+        db.indices.putAlias({ index: originalName, name: aliasName }).then(result=>{
             console.log('Index alias created', result)
         }).then(next).catch(err => {
             console.log(err.message)
             next()
         })
     }
+
     return db.indices.deleteAlias({
         index: aliasName,
-        name: originalName
+        name:  originalName
     }).then((result) => {
         console.log('Public index alias deleted', result)
         step2()
@@ -22,13 +27,13 @@ function putAlias(db, originalName, aliasName, next) {
 function deleteIndex(db, indexName, next) {
     db.indices.delete({
         "index": indexName
-    }).then((res) => {
-        console.dir(res, {depth: null, colors: true})
+      }).then((res) => {
+        console.dir(res, { depth: null, colors: true })
         next()
-    }).catch(err => {
+      }).catch(err => {
         console.error(err)
         next(err)
-    })
+      })
 }
 
 function reIndex(db, fromIndexName, toIndexName, next) {
