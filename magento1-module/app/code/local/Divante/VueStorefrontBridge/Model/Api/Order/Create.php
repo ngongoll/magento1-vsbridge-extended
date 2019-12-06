@@ -98,6 +98,9 @@ class Divante_VueStorefrontBridge_Model_Api_Order_Create
                 'cc_exp_month' => substr($paymentMethodAdditional->cardexpiredate,2,2),
                 'cc_exp_year' => '20'.substr($paymentMethodAdditional->cardexpiredate,0,2),
                 'payone_pseudocardpan' => $paymentMethodAdditional->pseudocardpan,
+                'payone_wallet_type' => $paymentMethodAdditional->payone_wallet_type,
+                'payone_bank_country' => $paymentMethodAdditional->payone_bank_country,
+                'payone_sepa_iban' => $paymentMethodAdditional->payone_sepa_iban,
                 'payone_config_payment_method_id' => $paymentMethodAdditional->payone_config_payment_method_id
             ]
         );
