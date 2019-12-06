@@ -82,6 +82,7 @@ class Divante_VueStorefrontBridge_Model_Api_Order_Create
         $shippingAddressData->implodeStreetAddress();
         $shippingMethodCode = $requestPayload->addressInformation->shipping_method_code;
         $paymentMethodCode = $requestPayload->addressInformation->payment_method_code;
+        $paymentMethodAdditional = $requestPayload->addressInformation->payment_method_additional;
         $shippingMethodCarrier = $requestPayload->addressInformation->shipping_carrier_code;
         $shippingMethod = $shippingMethodCarrier  . '_' . $shippingMethodCode;
 
@@ -90,7 +91,16 @@ class Divante_VueStorefrontBridge_Model_Api_Order_Create
             ->collectShippingRates();
         // Set shipping and payment method on quote shipping address data
         $shippingAddressData->setShippingMethod($shippingMethod)->setPaymentMethod($paymentMethodCode);
-        $this->quote->getPayment()->importData(['method' => $paymentMethodCode]);
+        $this->quote->getPayment()->importData([
+                'method' => $paymentMethodCode,
+                'cc_type' => $paymentMethodAdditional->cardtype,
+                'cc_number_enc' => $paymentMethodAdditional->truncatedcardpan,
+                'cc_exp_month' => substr($paymentMethodAdditional->cardexpiredate,2,2),
+                'cc_exp_year' => '20'.substr($paymentMethodAdditional->cardexpiredate,0,2),
+                'payone_pseudocardpan' => $paymentMethodAdditional->pseudocardpan,
+                'payone_config_payment_method_id' => $paymentMethodAdditional->payone_config_payment_method_id
+            ]
+        );
 
         $this->quote->getShippingAddress()->setCollectShippingRates(true);
         $this->quote->collectTotals();
