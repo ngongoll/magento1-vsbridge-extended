@@ -102,6 +102,7 @@ class Divante_VueStorefrontBridge_Model_Api_Order_Create
                 'payone_bank_country' => $paymentMethodAdditional->bankcountry,
                 'payone_sepa_iban' => $paymentMethodAdditional->iban,
                 'payone_sepa_bic' => $paymentMethodAdditional->bic,
+                'payone_onlinebanktransfer_type' => $paymentMethodAdditional->onlinebanktransfertype,
                 'payone_config_payment_method_id' => $paymentMethodAdditional->payone_config_payment_method_id
             ]
         );
